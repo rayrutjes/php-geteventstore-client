@@ -1,0 +1,25 @@
+
+sudo: required
+
+services:
+  - docker
+
+language: php
+
+php:
+  - 7.0
+  - hhvm
+  - nightly
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
+
+before_install:
+  - bin/run-ges.sh
+  - docker ps
+  - travis_retry composer update --no-interaction --prefer-source
+
+after_script:
+  - docker logs geteventstore

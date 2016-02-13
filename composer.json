@@ -1,0 +1,30 @@
+{
+    "name": "rayrutjes/php-geteventstore-client",
+    "require": {
+        "php": "~7.0",
+        "ramsey/uuid": "^3.1"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "~6.0",
+        "phpunit/phpunit": "^5.2"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "Required when using the http client."
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rayrutjes",
+            "email": "raymond.rutjes@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"RayRutjes\\GetEventStore\\": "src/"}
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RayRutjes\\GetEventStore\\Test\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable"
+}
