@@ -49,10 +49,11 @@ interface ClientInterface
     public function createPersistentSubscription(string $streamId, string $groupName, PersistentSubscriptionSettings $settings);
 
     /**
-     * @param string $streamId
-     * @param string $groupName
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
      */
-    public function updatePersistentSubscription(string $streamId, string $groupName);
+    public function updatePersistentSubscription(string $streamId, string $groupName, PersistentSubscriptionSettings $settings);
 
     /**
      * @param string $streamId

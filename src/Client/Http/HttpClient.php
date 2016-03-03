@@ -202,16 +202,21 @@ final class HttpClient implements ClientInterface
         string $groupName,
         PersistentSubscriptionSettings $settings
     ) {
-        // TODO: Implement createPersistentSubscription() method.
+        $streamId = new StreamId($streamId);
+        $factory = new CreatePersistentSubscriptionRequestFactory($streamId, $groupName, $settings);
+        $this->send($factory->buildRequest(), new CreatePersistentSubscriptionResponseInspector());
     }
 
     /**
-     * @param string $streamId
-     * @param string $groupName
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
      */
-    public function updatePersistentSubscription(string $streamId, string $groupName)
+    public function updatePersistentSubscription(string $streamId, string $groupName, PersistentSubscriptionSettings $settings)
     {
-        // TODO: Implement updatePersistentSubscription() method.
+        $streamId = new StreamId($streamId);
+        $factory = new UpdatePersistentSubscriptionRequestFactory($streamId, $groupName, $settings);
+        $this->send($factory->buildRequest(), new UpdatePersistentSubscriptionResponseInspector());
     }
 
     /**
@@ -220,7 +225,9 @@ final class HttpClient implements ClientInterface
      */
     public function deletePersistentSubscription(string $streamId, string $groupName)
     {
-        // TODO: Implement deletePersistentSubscription() method.
+        $streamId = new StreamId($streamId);
+        $factory = new DeletePersistentSubscriptionRequestFactory($streamId, $groupName);
+        $this->send($factory->buildRequest(), new DeletePersistentSubscriptionResponseInspector());
     }
 
     /**
