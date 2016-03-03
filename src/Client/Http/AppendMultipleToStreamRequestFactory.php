@@ -4,6 +4,7 @@ namespace RayRutjes\GetEventStore\Client\Http;
 
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
+use RayRutjes\GetEventStore\EventData;
 use RayRutjes\GetEventStore\EventDataCollection;
 use RayRutjes\GetEventStore\ExpectedVersion;
 use RayRutjes\GetEventStore\StreamId;
@@ -63,10 +64,12 @@ final class AppendMultipleToStreamRequestFactory implements RequestFactoryInterf
     {
         $data = [];
         foreach ($this->events as $event) {
+            /* @var $event EventData */
             $data[] = [
                 'eventId'   => $event->getEventId()->toString(),
                 'eventType' => $event->getType(),
                 'data'      => $event->getData(),
+                'metadata'  => $event->getMetadata(),
             ];
         }
 

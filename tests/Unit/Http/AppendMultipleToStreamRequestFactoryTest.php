@@ -24,7 +24,7 @@ class AppendMultipleToStreamRequestFactoryTest extends TestCase
         $uuid2 = $this->newUuid();
         $type2 = 'RayRutjes\GetEventStore\FakeEvent2';
         $data2 = ['a' => 'test2'];
-        $metadata2 = [];
+        $metadata2 = ['test' => 'value'];
         $event2 = new EventData($uuid2, $type2, $data2, $metadata2);
 
         $expectedBody = <<<'EOD'
@@ -32,12 +32,14 @@ class AppendMultipleToStreamRequestFactoryTest extends TestCase
     {
         "eventId": "%s",
         "eventType": "RayRutjes\\GetEventStore\\FakeEvent1",
-        "data": {"a":"test1"}
+        "data": {"a":"test1"},
+        "metadata":[]
     },
     {
         "eventId": "%s",
         "eventType": "RayRutjes\\GetEventStore\\FakeEvent2",
-        "data": {"a":"test2"}
+        "data": {"a":"test2"},
+        "metadata": {"test":"value"}
     }
 ]
 EOD;

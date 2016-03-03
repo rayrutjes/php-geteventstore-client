@@ -64,15 +64,10 @@ final class HttpClient implements ClientInterface
         if ($streamId->isSystem()) {
             throw new \InvalidArgumentException(sprintf('Can not append to system stream %s', $streamId));
         }
-        // todo: what about metadata stream?
 
         $expectedVersion = new ExpectedVersion($expectedVersion);
 
-        if (1 === $events->count()) {
-            $request = new AppendSingleToStreamRequestFactory($streamId, $expectedVersion, $events->current());
-        } else {
-            $request = new AppendMultipleToStreamRequestFactory($streamId, $expectedVersion, $events);
-        }
+        $request = new AppendMultipleToStreamRequestFactory($streamId, $expectedVersion, $events);
 
         $this->send($request->buildRequest(), new AppendToStreamResponseInspector());
     }
