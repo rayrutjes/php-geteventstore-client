@@ -13,6 +13,7 @@ use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamIterator;
 use RayRutjes\GetEventStore\EventDataCollection;
 use RayRutjes\GetEventStore\EventRecordCollection;
 use RayRutjes\GetEventStore\ExpectedVersion;
+use RayRutjes\GetEventStore\PersistentSubscriptionSettings;
 use RayRutjes\GetEventStore\StreamId;
 use RayRutjes\GetEventStore\UserCredentials;
 
@@ -189,5 +190,53 @@ final class HttpClient implements ClientInterface
         $events = array_reverse($events);
 
         return EventRecordCollection::fromArray($events);
+    }
+
+    /**
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
+     */
+    public function createPersistentSubscription(
+        string $streamId,
+        string $groupName,
+        PersistentSubscriptionSettings $settings
+    ) {
+        // TODO: Implement createPersistentSubscription() method.
+    }
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     */
+    public function updatePersistentSubscription(string $streamId, string $groupName)
+    {
+        // TODO: Implement updatePersistentSubscription() method.
+    }
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     */
+    public function deletePersistentSubscription(string $streamId, string $groupName)
+    {
+        // TODO: Implement deletePersistentSubscription() method.
+    }
+
+    /**
+     * @param string   $streamId
+     * @param string   $groupName
+     * @param callable $messageHandler
+     * @param int      $bufferSize
+     * @param bool     $autoAck
+     */
+    public function readStreamViaPersistentSubscription(
+        string $streamId,
+        string $groupName,
+        callable $messageHandler,
+        int $bufferSize = 1,
+        bool $autoAck = true
+    ) {
+        // TODO: Implement readStreamViaPersistentSubscription() method.
     }
 }

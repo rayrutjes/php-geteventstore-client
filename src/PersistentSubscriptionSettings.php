@@ -49,16 +49,6 @@ final class PersistentSubscriptionSettings
     private $maxRetries = 3;
 
     /**
-     * @var int
-     */
-    private $bufferSize = 20;
-
-    /**
-     * @var int
-     */
-    private $liveBufferSize = 20;
-
-    /**
      * @var bool
      */
     private $extraStatistics = false;
@@ -258,42 +248,6 @@ final class PersistentSubscriptionSettings
         }
 
         $this->readBatch = $count;
-
-        return $this;
-    }
-
-    /**
-     * The number of messages that should be buffered when in paging mode.
-     *
-     * @param int $count
-     *
-     * @return PersistentSubscriptionSettings
-     */
-    public function withBufferSizeOf(int $count): PersistentSubscriptionSettings
-    {
-        if ($count <= 0) {
-            throw new \InvalidArgumentException(sprintf('Buffer size should be > 0, Got: %d', $count));
-        }
-
-        $this->bufferSize = $count;
-
-        return $this;
-    }
-
-    /**
-     * The size of the live buffer (in memory) before resorting to paging.
-     *
-     * @param int $count
-     *
-     * @return PersistentSubscriptionSettings
-     */
-    public function withLiveBufferSizeOf(int $count): PersistentSubscriptionSettings
-    {
-        if ($count <= 0) {
-            throw new \InvalidArgumentException(sprintf('Live buffer size should be > 0, Got: %d', $count));
-        }
-
-        $this->liveBufferSize = $count;
 
         return $this;
     }
