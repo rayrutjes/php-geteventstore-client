@@ -57,6 +57,8 @@ abstract class AbstractResponseInspector implements ResponseInspector
      */
     protected function decodeData(string $data): array
     {
-        return json_decode($data, true);
+        $decoded = json_decode($data, true);
+
+        return !is_array($decoded) ? [] : $decoded;
     }
 }

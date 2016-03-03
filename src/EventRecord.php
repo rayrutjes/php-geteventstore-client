@@ -48,7 +48,7 @@ class EventRecord
     /**
      * @return string
      */
-    public function getStreamId()
+    public function getStreamId(): string
     {
         return $this->streamId;
     }
@@ -56,7 +56,7 @@ class EventRecord
     /**
      * @return int
      */
-    public function getNumber()
+    public function getNumber(): int
     {
         return $this->number;
     }
@@ -64,7 +64,7 @@ class EventRecord
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -72,7 +72,7 @@ class EventRecord
     /**
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
@@ -80,7 +80,7 @@ class EventRecord
     /**
      * @return array
      */
-    public function getMetadata()
+    public function getMetadata(): array
     {
         return $this->metadata;
     }

@@ -3,6 +3,7 @@
 namespace RayRutjes\GetEventStore\Test\Integration;
 
 use RayRutjes\GetEventStore\Client\Http\HttpClient;
+use RayRutjes\GetEventStore\ClientInterface;
 use RayRutjes\GetEventStore\EventData;
 use RayRutjes\GetEventStore\EventRecordCollection;
 use RayRutjes\GetEventStore\Test\TestCase;
@@ -22,7 +23,7 @@ abstract class IntegrationTestCase extends TestCase
      * @param float           $connectTimeout
      * @param array           $options
      *
-     * @return Client
+     * @return ClientInterface
      */
     protected function buildClient(UserCredentials $credentials = null, float $connectTimeout = 0, array $options = [])
     {
@@ -85,9 +86,9 @@ abstract class IntegrationTestCase extends TestCase
             $this->assertEquals($data->getType(), $record->getType());
             $this->assertEquals($key + $offset, $record->getNumber());
             $this->assertEquals($streamId, $record->getStreamId());
+            $this->assertEquals($data->getMetadata(), $record->getMetadata());
 
-            // todo: Add the metadata and event id tests.
-            // $this->assertEquals($data->getMetadata(), $record->getMetadata());
+            // todo: Add event id tests.
             // $this->assertEquals($data->getEventId(), $record->getEventId());
         }
 

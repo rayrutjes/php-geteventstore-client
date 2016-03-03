@@ -43,8 +43,7 @@ class ReadEventStreamFeedResponseInspector extends AbstractResponseInspector
             $number = $entry['eventNumber'];
             $type = $entry['eventType'];
             $eventData = isset($entry['data']) ? $this->decodeData($entry['data']) : [];
-            $eventMetadata = isset($entry['metadata']) ? $this->decodeData($entry['metadata']) : [];
-            // todo: figure out why metadata is always empty.
+            $eventMetadata = isset($entry['metaData']) ? $this->decodeData($entry['metaData']) : [];
 
             $events[] = new EventRecord($streamId, $number, $type, $eventData, $eventMetadata);
         }
