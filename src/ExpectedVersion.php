@@ -15,7 +15,7 @@ class ExpectedVersion
     const NO_STREAM = -1;
 
     /**
-     * Will always succeed. This should not be used if you to keep your event store consistent.
+     * Will always succeed. This should not be used if you want to keep your event store consistent.
      */
     const ANY = -2;
 
