@@ -9,7 +9,7 @@ use RayRutjes\GetEventStore\EventDataCollection;
 use RayRutjes\GetEventStore\ExpectedVersion;
 use RayRutjes\GetEventStore\StreamId;
 
-final class AppendMultipleToStreamRequestFactory implements RequestFactoryInterface
+final class AppendToStreamRequestFactory implements RequestFactoryInterface
 {
     /**
      * @var StreamId
