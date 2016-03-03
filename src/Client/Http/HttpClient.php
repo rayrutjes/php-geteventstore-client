@@ -67,7 +67,7 @@ final class HttpClient implements ClientInterface
 
         $expectedVersion = new ExpectedVersion($expectedVersion);
 
-        $request = new AppendMultipleToStreamRequestFactory($streamId, $expectedVersion, $events);
+        $request = new AppendToStreamRequestFactory($streamId, $expectedVersion, $events);
 
         $this->send($request->buildRequest(), new AppendToStreamResponseInspector());
     }

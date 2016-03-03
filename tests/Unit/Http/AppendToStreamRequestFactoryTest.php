@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore\Unit\Http;
 
-use RayRutjes\GetEventStore\Client\Http\AppendMultipleToStreamRequestFactory;
+use RayRutjes\GetEventStore\Client\Http\AppendToStreamRequestFactory;
 use RayRutjes\GetEventStore\Client\Http\ContentType;
 use RayRutjes\GetEventStore\Client\Http\RequestHeader;
 use RayRutjes\GetEventStore\EventData;
@@ -11,7 +11,7 @@ use RayRutjes\GetEventStore\ExpectedVersion;
 use RayRutjes\GetEventStore\StreamId;
 use RayRutjes\GetEventStore\Test\TestCase;
 
-class AppendMultipleToStreamRequestFactoryTest extends TestCase
+class AppendToStreamRequestFactoryTest extends TestCase
 {
     public function testCanBuildARequest()
     {
@@ -45,7 +45,7 @@ class AppendMultipleToStreamRequestFactoryTest extends TestCase
 EOD;
         $expectedBody = sprintf(str_replace([' ', "\n"], '', $expectedBody), $uuid1, $uuid2);
 
-        $cut = new AppendMultipleToStreamRequestFactory(
+        $cut = new AppendToStreamRequestFactory(
             new StreamId('stream'),
             new ExpectedVersion(ExpectedVersion::ANY),
             EventDataCollection::fromArray([$event1, $event2])
