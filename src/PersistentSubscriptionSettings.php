@@ -11,7 +11,7 @@ final class PersistentSubscriptionSettings
     /**
      * @var bool
      */
-    private $resolveLinkTos = true;
+    private $resolveLinktos = true;
 
     /**
      * @var string
@@ -26,12 +26,12 @@ final class PersistentSubscriptionSettings
     /**
      * @var int
      */
-    private $timeout = 3;
+    private $messageTimeoutMilliseconds = 3;
 
     /**
      * @var int
      */
-    private $checkpointAfter = 3;
+    private $checkPointAfterMilliseconds = 3;
 
     /**
      * @var int
@@ -46,7 +46,7 @@ final class PersistentSubscriptionSettings
     /**
      * @var int
      */
-    private $maxRetries = 3;
+    private $maxRetryCount = 3;
 
     /**
      * @var bool
@@ -56,16 +56,21 @@ final class PersistentSubscriptionSettings
     /**
      * @var int
      */
-    private $readBatch = 20;
+    private $readBatchSize = 20;
+
+    /**
+     * @var int
+     */
+    private $maxSubscriberCount = 10;
 
     /**
      * Tells the subscription to resolve link events.
      *
      * @return PersistentSubscriptionSettings
      */
-    public function resolveLinkTos(): PersistentSubscriptionSettings
+    public function resolveLinktos(): PersistentSubscriptionSettings
     {
-        $this->resolveLinkTos = true;
+        $this->resolveLinktos = true;
 
         return $this;
     }
@@ -75,9 +80,9 @@ final class PersistentSubscriptionSettings
      *
      * @return PersistentSubscriptionSettings
      */
-    public function doNotResolveLinkTos(): PersistentSubscriptionSettings
+    public function doNotResolveLinktos(): PersistentSubscriptionSettings
     {
-        $this->resolveLinkTos = false;
+        $this->resolveLinktos = false;
 
         return $this;
     }
@@ -118,6 +123,13 @@ final class PersistentSubscriptionSettings
         return $this;
     }
 
+    /**
+     * Start the subscription from the position-th event in the stream.
+     *
+     * @param int $position
+     *
+     * @return PersistentSubscriptionSettings
+     */
     public function startFrom(int $position): PersistentSubscriptionSettings
     {
         if ($position < 0) {
@@ -141,19 +153,19 @@ final class PersistentSubscriptionSettings
     }
 
     /**
-     * Sets the timeout for a client before the message will be retried.
+     * Sets the timeout in milliseconds for a client before the message will be retried.
      *
      * @param int $timeout
      *
      * @return PersistentSubscriptionSettings
      */
-    public function withMessageTimeoutOf(int $timeout): PersistentSubscriptionSettings
+    public function withMessageTimeoutInMillisecondsOf(int $timeout): PersistentSubscriptionSettings
     {
         if ($timeout <= 0) {
             throw new \InvalidArgumentException(sprintf('Timeout must be > 0, Got: %d', $timeout));
         }
 
-        $this->timeout = $timeout;
+        $this->messageTimeoutMilliseconds = $timeout;
 
         return $this;
     }
@@ -171,7 +183,7 @@ final class PersistentSubscriptionSettings
             throw new \InvalidArgumentException(sprintf('Time must be > 0, Got: %d', $time));
         }
 
-        $this->checkpointAfter = $time;
+        $this->checkPointAfterMilliseconds = $time;
 
         return $this;
     }
@@ -183,7 +195,7 @@ final class PersistentSubscriptionSettings
      *
      * @return PersistentSubscriptionSettings
      */
-    public function minCheckPointCountOf(int $count): PersistentSubscriptionSettings
+    public function minCheckPointOf(int $count): PersistentSubscriptionSettings
     {
         if ($count <= 0) {
             throw new \InvalidArgumentException(sprintf('Count must be > 0, Got: %d', $count));
@@ -201,7 +213,7 @@ final class PersistentSubscriptionSettings
      *
      * @return PersistentSubscriptionSettings
      */
-    public function maxCheckPointCountOf(int $count): PersistentSubscriptionSettings
+    public function maxCheckPointOf(int $count): PersistentSubscriptionSettings
     {
         if ($count <= 0) {
             throw new \InvalidArgumentException(sprintf('Count must be > 0, Got: %d', $count));
@@ -229,7 +241,7 @@ final class PersistentSubscriptionSettings
             throw new \InvalidArgumentException(sprintf('Max retries count must be >= 0, Got: %d', $count));
         }
 
-        $this->maxRetries = $count;
+        $this->maxRetryCount = $count;
 
         return $this;
     }
@@ -247,7 +259,7 @@ final class PersistentSubscriptionSettings
             throw new \InvalidArgumentException(sprintf('Read batch must be > 0, Got: %d', $count));
         }
 
-        $this->readBatch = $count;
+        $this->readBatchSize = $count;
 
         return $this;
     }
@@ -262,5 +274,41 @@ final class PersistentSubscriptionSettings
         $this->extraStatistics = true;
 
         return $this;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function withMaxSubscribersOf(int $count)
+    {
+        if ($count <= 0) {
+            throw new \InvalidArgumentException(sprintf('Max subscribers count must be > 0, Got: %d', $count));
+        }
+
+        $this->maxSubscriberCount = $count;
+
+        return $this;
+    }
+
+    /**
+     * Sets the maximum number of allowed subscribers.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'checkPointAfterMilliseconds' => $this->checkPointAfterMilliseconds,
+            'extraStatistics'             => $this->extraStatistics,
+            'maxCheckPointCount'          => $this->maxCheckPointCount,
+            'minCheckPointCount'          => $this->minCheckPointCount,
+            'maxRetryCount'               => $this->maxRetryCount,
+            'namedConsumerStrategy'       => $this->namedConsumerStrategy,
+            'readBatchSize'               => $this->readBatchSize,
+            'messageTimeoutMilliseconds'  => $this->messageTimeoutMilliseconds,
+            'namedConsumerStrategy'       => $this->namedConsumerStrategy,
+            'maxSubscriberCount'          => $this->maxSubscriberCount,
+            'resolveLinktos'              => $this->resolveLinktos,
+        ];
     }
 }

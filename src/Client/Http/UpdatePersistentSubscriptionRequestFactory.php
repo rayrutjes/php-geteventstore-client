@@ -47,7 +47,7 @@ final class UpdatePersistentSubscriptionRequestFactory implements RequestFactory
             [
                 RequestHeader::CONTENT_TYPE => ContentType::JSON,
             ],
-            json_encode($this->settings)
+            json_encode($this->settings->toArray())
         );
     }
 }

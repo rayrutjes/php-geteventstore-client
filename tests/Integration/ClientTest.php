@@ -3,6 +3,7 @@
 namespace RayRutjes\GetEventStore\Test\Integration;
 
 use RayRutjes\GetEventStore\ExpectedVersion;
+use RayRutjes\GetEventStore\PersistentSubscriptionSettings;
 
 class ClientTest extends IntegrationTestCase
 {
@@ -127,5 +128,43 @@ class ClientTest extends IntegrationTestCase
         $client->readAllEvents();
         // todo: this is pretty hard to test.
         // todo: I think this function should somehow filter the system and metadata events.
+    }
+
+    public function testCanCreatePersistentSubscription()
+    {
+        $settings = new PersistentSubscriptionSettings();
+        $client = $this->buildClient();
+        $client->createPersistentSubscription('stream', 'group', $settings);
+    }
+
+    /**
+     * @depends testCanCreatePersistentSubscription
+     */
+    public function testCanUpdatePersistentSubscription()
+    {
+        $settings = new PersistentSubscriptionSettings();
+        $settings->doNotResolveLinktos()
+            ->checkPointAfter(5000)
+            ->maxCheckPointOf(666)
+            ->minCheckPointOf(444)
+            ->preferDispatchToSingle()
+            ->startFrom(3)
+            ->withExtraStatistics()
+            ->withMaxRetriesOf(66)
+            ->withMaxSubscribersOf(99)
+            ->withMessageTimeoutInMillisecondsOf(666)
+            ->WithReadBatchOf(66);
+
+        $client = $this->buildClient();
+        $client->updatePersistentSubscription('stream', 'group', $settings);
+    }
+
+    /**
+     * @depends testCanUpdatePersistentSubscription
+     */
+    public function testCanDeletePersistentSubscription()
+    {
+        $client = $this->buildClient();
+        $client->deletePersistentSubscription('stream', 'group');
     }
 }
