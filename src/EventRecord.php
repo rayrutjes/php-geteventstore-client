@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore;
 
-class EventRecord
+final class EventRecord
 {
     /**
      * @var string

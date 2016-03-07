@@ -4,7 +4,7 @@ namespace RayRutjes\GetEventStore\Client\Http\Feed;
 
 use RayRutjes\GetEventStore\EventRecord;
 
-class EventStreamIterator implements \Iterator
+final class EventStreamIterator implements \Iterator
 {
     /**
      * @var EventStreamFeedIterator

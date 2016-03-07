@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore\Util;
 
-class InternalIterator implements \Iterator
+abstract class InternalIterator implements \Iterator
 {
     use InternalIteratorTrait;
 

@@ -7,7 +7,7 @@ use RayRutjes\GetEventStore\EventRecord;
 use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamFeed;
 use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamFeedLink;
 
-class ReadEventStreamFeedResponseInspector extends AbstractResponseInspector
+final class ReadEventStreamFeedResponseInspector extends AbstractResponseInspector
 {
     /**
      * @var EventStreamFeed
@@ -44,7 +44,6 @@ class ReadEventStreamFeedResponseInspector extends AbstractResponseInspector
             $type = $entry['eventType'];
             $eventData = isset($entry['data']) ? $this->decodeData($entry['data']) : [];
             $eventMetadata = isset($entry['metaData']) ? $this->decodeData($entry['metaData']) : [];
-
             $events[] = new EventRecord($streamId, $number, $type, $eventData, $eventMetadata);
         }
 

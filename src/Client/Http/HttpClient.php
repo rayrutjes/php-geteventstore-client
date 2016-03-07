@@ -13,6 +13,7 @@ use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamIterator;
 use RayRutjes\GetEventStore\EventDataCollection;
 use RayRutjes\GetEventStore\EventRecordCollection;
 use RayRutjes\GetEventStore\ExpectedVersion;
+use RayRutjes\GetEventStore\PersistentSubscriptionInfo;
 use RayRutjes\GetEventStore\PersistentSubscriptionSettings;
 use RayRutjes\GetEventStore\StreamId;
 use RayRutjes\GetEventStore\UserCredentials;
@@ -245,5 +246,21 @@ final class HttpClient implements ClientInterface
         bool $autoAck = true
     ) {
         // TODO: Implement readStreamViaPersistentSubscription() method.
+    }
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     *
+     * @return PersistentSubscriptionInfo
+     */
+    public function getPersistentSubscriptionInfo(string $streamId, string $groupName): PersistentSubscriptionInfo
+    {
+        $streamId = new StreamId($streamId);
+        $factory = new GetPersistentSubscriptionInfoRequestFactory($streamId, $groupName);
+        $inspector = new GetPersistentSubscriptionInfoResponseInspector();
+        $this->send($factory->buildRequest(), $inspector);
+
+        return $inspector->getFeed()->getPersistentSubscriptionInfo();
     }
 }

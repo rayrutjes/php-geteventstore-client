@@ -135,11 +135,14 @@ class ClientTest extends IntegrationTestCase
         $settings = new PersistentSubscriptionSettings();
         $client = $this->buildClient();
         $client->createPersistentSubscription('stream', 'group', $settings);
+
+        $expected = $settings->toArray();
+        $result = $client->getPersistentSubscriptionInfo('stream', 'group');
+        $this->assertEquals('stream', $result->getStreamId()->toString());
+        $this->assertEquals('group', $result->getGroupName());
+        $this->assertEquals($expected, $result->getSettings()->toArray());
     }
 
-    /**
-     * @depends testCanCreatePersistentSubscription
-     */
     public function testCanUpdatePersistentSubscription()
     {
         $settings = new PersistentSubscriptionSettings();
@@ -151,17 +154,21 @@ class ClientTest extends IntegrationTestCase
             ->startFrom(3)
             ->withExtraStatistics()
             ->withMaxRetriesOf(66)
-            ->withMaxSubscribersOf(99)
+            // todo: waiting for a fix to add this test.
+            // ->withMaxSubscribersOf(99)
             ->withMessageTimeoutInMillisecondsOf(666)
             ->WithReadBatchOf(66);
 
         $client = $this->buildClient();
         $client->updatePersistentSubscription('stream', 'group', $settings);
+
+        $expected = $settings->toArray();
+        $result = $client->getPersistentSubscriptionInfo('stream', 'group');
+        $this->assertEquals('stream', $result->getStreamId()->toString());
+        $this->assertEquals('group', $result->getGroupName());
+        $this->assertEquals($expected, $result->getSettings()->toArray());
     }
 
-    /**
-     * @depends testCanUpdatePersistentSubscription
-     */
     public function testCanDeletePersistentSubscription()
     {
         $client = $this->buildClient();

@@ -4,7 +4,7 @@ namespace RayRutjes\GetEventStore\Client\Http\Feed;
 
 use RayRutjes\GetEventStore\EventRecord;
 
-class EventStreamFeed
+final class EventStreamFeed
 {
     /**
      * @var array

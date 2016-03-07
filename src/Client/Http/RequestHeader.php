@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore\Client\Http;
 
-class RequestHeader
+final class RequestHeader
 {
     // The well known Content-Type header, present for consistency.
     const CONTENT_TYPE = 'Content-Type';

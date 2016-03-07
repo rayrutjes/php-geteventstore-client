@@ -4,7 +4,7 @@ namespace RayRutjes\GetEventStore\Client\Http;
 
 use Psr\Http\Message\ResponseInterface;
 
-class DeletePersistentSubscriptionResponseInspector extends AbstractResponseInspector
+final class DeletePersistentSubscriptionResponseInspector extends AbstractResponseInspector
 {
     /**
      * @param ResponseInterface $response

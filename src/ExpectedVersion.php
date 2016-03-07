@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore;
 
-class ExpectedVersion
+final class ExpectedVersion
 {
     /**
      * Ensures that the stream exists but contains no events.

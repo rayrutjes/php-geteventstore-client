@@ -62,6 +62,14 @@ interface ClientInterface
     public function deletePersistentSubscription(string $streamId, string $groupName);
 
     /**
+     * @param string $streamId
+     * @param string $groupName
+     *
+     * @return PersistentSubscriptionInfo
+     */
+    public function getPersistentSubscriptionInfo(string $streamId, string $groupName): PersistentSubscriptionInfo;
+
+    /**
      * @param string   $streamId
      * @param string   $groupName
      * @param callable $messageHandler

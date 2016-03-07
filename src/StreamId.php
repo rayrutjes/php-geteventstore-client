@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore;
 
-class StreamId
+final class StreamId
 {
     const ALL = '$all';
 

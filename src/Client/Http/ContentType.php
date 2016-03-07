@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore\Client\Http;
 
-class ContentType
+final class ContentType
 {
     const JSON = 'application/json';
     const JSON_ES = 'application/vnd.eventstore.events+json';

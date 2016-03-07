@@ -2,7 +2,7 @@
 
 namespace RayRutjes\GetEventStore;
 
-class ReadDirection
+final class ReadDirection
 {
     const FORWARD = 1;
     const BACKWARD = 0;
