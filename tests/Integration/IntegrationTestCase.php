@@ -45,12 +45,12 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * @return EventData
      */
-    protected function fakeEvent()
+    protected function fakeEvent($index)
     {
         return new EventData(
             $this->newUuid(),
             'GetEventStore\\FakeEventType',
-            ['a' => 'Test data'],
+            ['a' => 'Test data' . $index],
             ['b' => 'Test metadata']
         );
     }
@@ -64,7 +64,7 @@ abstract class IntegrationTestCase extends TestCase
     {
         $events = [];
         for ($i = 1; $i <= $size; $i++) {
-            $events[] = $this->fakeEvent();
+            $events[] = $this->fakeEvent($i);
         }
 
         return $events;

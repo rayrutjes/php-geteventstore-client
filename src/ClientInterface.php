@@ -73,8 +73,8 @@ interface ClientInterface
      * @param string   $streamId
      * @param string   $groupName
      * @param callable $messageHandler
-     * @param int      $bufferSize
+     * @param int      $batchSize
      * @param bool     $autoAck
      */
-    public function readStreamViaPersistentSubscription(string $streamId, string $groupName, callable $messageHandler, int $bufferSize = 1, bool $autoAck = true);
+    public function readStreamViaPersistentSubscription(string $streamId, string $groupName, callable $messageHandler, int $batchSize = 1, bool $autoAck = true);
 }

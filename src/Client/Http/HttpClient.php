@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamViaPersistentSubscriptionFeedIterator;
+use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamViaPersistentSubscriptionIterator;
 use RayRutjes\GetEventStore\ClientInterface;
 use RayRutjes\GetEventStore\Client\Exception\SystemException;
 use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamFeedIterator;
@@ -235,17 +237,31 @@ final class HttpClient implements ClientInterface
      * @param string   $streamId
      * @param string   $groupName
      * @param callable $messageHandler
-     * @param int      $bufferSize
+     * @param int      $batchSize
      * @param bool     $autoAck
      */
     public function readStreamViaPersistentSubscription(
         string $streamId,
         string $groupName,
         callable $messageHandler,
-        int $bufferSize = 1,
+        int $batchSize = 1,
         bool $autoAck = true
     ) {
-        // TODO: Implement readStreamViaPersistentSubscription() method.
+        $streamId = new StreamId($streamId);
+        $feedsIterator = new EventStreamViaPersistentSubscriptionFeedIterator($streamId, $groupName, $this, $batchSize);
+        $eventsIterator = new EventStreamViaPersistentSubscriptionIterator($feedsIterator);
+        // todo: missing a subscription here to ack/nack messages on a single basis or multiple basis.
+        foreach ($eventsIterator as $event) {
+            try {
+                call_user_func($messageHandler, $event);
+            } catch (\Exception $e) {
+                // todo: notAck!
+                throw $e;
+            }
+            // todo: ack!
+        }
+
+        // todo: ackAll ???
     }
 
     /**

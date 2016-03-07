@@ -26,17 +26,17 @@ final class PersistentSubscriptionSettings
     /**
      * @var int
      */
-    private $messageTimeoutMilliseconds = 3;
+    private $messageTimeoutMilliseconds = 10000;
 
     /**
      * @var int
      */
-    private $checkPointAfterMilliseconds = 3;
+    private $checkPointAfterMilliseconds = 1000;
 
     /**
      * @var int
      */
-    private $minCheckPointCount = 100;
+    private $minCheckPointCount = 10;
 
     /**
      * @var int
@@ -46,7 +46,7 @@ final class PersistentSubscriptionSettings
     /**
      * @var int
      */
-    private $maxRetryCount = 3;
+    private $maxRetryCount = 10;
 
     /**
      * @var bool
