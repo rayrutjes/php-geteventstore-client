@@ -2,14 +2,15 @@
 
 namespace RayRutjes\GetEventStore\Client\Http\Feed;
 
-final class EventStreamFeedLink extends AbstractFeedLink
+final class EventStreamViaPersistentSubscriptionFeedLink extends AbstractFeedLink
 {
     const LINK_SELF = 'self';
     const LINK_FIRST = 'first';
     const LINK_LAST = 'last';
     const LINK_PREVIOUS = 'previous';
     const LINK_NEXT = 'next';
-    const LINK_METADATA = 'metadata';
+    const LINK_ACK_ALL = 'ackAll';
+    const LINK_NACK_ALL = 'nackAll';
 
     /**
      * @return array
@@ -22,7 +23,8 @@ final class EventStreamFeedLink extends AbstractFeedLink
             self::LINK_LAST,
             self::LINK_PREVIOUS,
             self::LINK_NEXT,
-            self::LINK_METADATA,
+            self::LINK_ACK_ALL,
+            self::LINK_NACK_ALL,
         ];
     }
 }

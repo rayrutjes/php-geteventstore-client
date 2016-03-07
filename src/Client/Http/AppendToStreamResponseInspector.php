@@ -5,7 +5,7 @@ namespace RayRutjes\GetEventStore\Client\Http;
 use Psr\Http\Message\ResponseInterface;
 use RayRutjes\GetEventStore\Client\Exception\WrongExpectedVersionException;
 
-class AppendToStreamResponseInspector extends AbstractResponseInspector
+final class AppendToStreamResponseInspector extends AbstractResponseInspector
 {
     /**
      * @param ResponseInterface $response

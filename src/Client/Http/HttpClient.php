@@ -6,6 +6,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamViaPersistentSubscriptionFeedIterator;
+use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamViaPersistentSubscriptionIterator;
 use RayRutjes\GetEventStore\ClientInterface;
 use RayRutjes\GetEventStore\Client\Exception\SystemException;
 use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamFeedIterator;
@@ -13,6 +15,8 @@ use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamIterator;
 use RayRutjes\GetEventStore\EventDataCollection;
 use RayRutjes\GetEventStore\EventRecordCollection;
 use RayRutjes\GetEventStore\ExpectedVersion;
+use RayRutjes\GetEventStore\PersistentSubscriptionInfo;
+use RayRutjes\GetEventStore\PersistentSubscriptionSettings;
 use RayRutjes\GetEventStore\StreamId;
 use RayRutjes\GetEventStore\UserCredentials;
 
@@ -189,5 +193,90 @@ final class HttpClient implements ClientInterface
         $events = array_reverse($events);
 
         return EventRecordCollection::fromArray($events);
+    }
+
+    /**
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
+     */
+    public function createPersistentSubscription(
+        string $streamId,
+        string $groupName,
+        PersistentSubscriptionSettings $settings
+    ) {
+        $streamId = new StreamId($streamId);
+        $factory = new CreatePersistentSubscriptionRequestFactory($streamId, $groupName, $settings);
+        $this->send($factory->buildRequest(), new CreatePersistentSubscriptionResponseInspector());
+    }
+
+    /**
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
+     */
+    public function updatePersistentSubscription(string $streamId, string $groupName, PersistentSubscriptionSettings $settings)
+    {
+        $streamId = new StreamId($streamId);
+        $factory = new UpdatePersistentSubscriptionRequestFactory($streamId, $groupName, $settings);
+        $this->send($factory->buildRequest(), new UpdatePersistentSubscriptionResponseInspector());
+    }
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     */
+    public function deletePersistentSubscription(string $streamId, string $groupName)
+    {
+        $streamId = new StreamId($streamId);
+        $factory = new DeletePersistentSubscriptionRequestFactory($streamId, $groupName);
+        $this->send($factory->buildRequest(), new DeletePersistentSubscriptionResponseInspector());
+    }
+
+    /**
+     * @param string   $streamId
+     * @param string   $groupName
+     * @param callable $messageHandler
+     * @param int      $batchSize
+     * @param bool     $autoAck
+     */
+    public function readStreamViaPersistentSubscription(
+        string $streamId,
+        string $groupName,
+        callable $messageHandler,
+        int $batchSize = 1,
+        bool $autoAck = true
+    ) {
+        $streamId = new StreamId($streamId);
+        $feedsIterator = new EventStreamViaPersistentSubscriptionFeedIterator($streamId, $groupName, $this, $batchSize);
+        $eventsIterator = new EventStreamViaPersistentSubscriptionIterator($feedsIterator);
+        // todo: missing a subscription here to ack/nack messages on a single basis or multiple basis.
+        foreach ($eventsIterator as $event) {
+            try {
+                call_user_func($messageHandler, $event);
+            } catch (\Exception $e) {
+                // todo: notAck!
+                throw $e;
+            }
+            // todo: ack!
+        }
+
+        // todo: ackAll ???
+    }
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     *
+     * @return PersistentSubscriptionInfo
+     */
+    public function getPersistentSubscriptionInfo(string $streamId, string $groupName): PersistentSubscriptionInfo
+    {
+        $streamId = new StreamId($streamId);
+        $factory = new GetPersistentSubscriptionInfoRequestFactory($streamId, $groupName);
+        $inspector = new GetPersistentSubscriptionInfoResponseInspector();
+        $this->send($factory->buildRequest(), $inspector);
+
+        return $inspector->getFeed()->getPersistentSubscriptionInfo();
     }
 }

@@ -2,7 +2,10 @@
 
 namespace RayRutjes\GetEventStore\Test\Integration;
 
+use RayRutjes\GetEventStore\EventRecord;
+use RayRutjes\GetEventStore\EventRecordCollection;
 use RayRutjes\GetEventStore\ExpectedVersion;
+use RayRutjes\GetEventStore\PersistentSubscriptionSettings;
 
 class ClientTest extends IntegrationTestCase
 {
@@ -121,11 +124,100 @@ class ClientTest extends IntegrationTestCase
         $client->readStreamUpToVersion($streamId, 5);
     }
 
-    public function testCanReadAllEvents()
+    // Disabled for now.
+//    public function testCanReadAllEvents()
+//    {
+//        $client = $this->buildClient();
+//        $client->readAllEvents();
+//        // todo: this is pretty hard to test.
+//        // todo: I think this function should somehow filter the system and metadata events.
+//    }
+
+    public function testCanCreatePersistentSubscription()
+    {
+        $settings = new PersistentSubscriptionSettings();
+        $client = $this->buildClient();
+        $client->createPersistentSubscription('stream', 'group', $settings);
+
+        $expected = $settings->toArray();
+        $result = $client->getPersistentSubscriptionInfo('stream', 'group');
+        $this->assertEquals('stream', $result->getStreamId()->toString());
+        $this->assertEquals('group', $result->getGroupName());
+        $this->assertEquals($expected, $result->getSettings()->toArray());
+    }
+
+    public function testCanUpdatePersistentSubscription()
+    {
+        $settings = new PersistentSubscriptionSettings();
+        $settings->doNotResolveLinktos()
+            ->checkPointAfter(5000)
+            ->maxCheckPointOf(666)
+            ->minCheckPointOf(444)
+            ->preferDispatchToSingle()
+            ->startFrom(3)
+            ->withExtraStatistics()
+            ->withMaxRetriesOf(66)
+            // todo: waiting for a fix to add this test.
+            // ->withMaxSubscribersOf(99)
+            ->withMessageTimeoutInMillisecondsOf(666)
+            ->WithReadBatchOf(66);
+
+        $client = $this->buildClient();
+        $client->updatePersistentSubscription('stream', 'group', $settings);
+
+        $expected = $settings->toArray();
+        $result = $client->getPersistentSubscriptionInfo('stream', 'group');
+        $this->assertEquals('stream', $result->getStreamId()->toString());
+        $this->assertEquals('group', $result->getGroupName());
+        $this->assertEquals($expected, $result->getSettings()->toArray());
+    }
+
+    public function testCanDeletePersistentSubscription()
     {
         $client = $this->buildClient();
-        $client->readAllEvents();
-        // todo: this is pretty hard to test.
-        // todo: I think this function should somehow filter the system and metadata events.
+        $client->deletePersistentSubscription('stream', 'group');
+    }
+
+    /**
+     * @dataProvider differentCounts
+     */
+    public function testCanReadEventsThroughPersistentSubscriptions($counts)
+    {
+        $client = $this->buildClient();
+
+        $expectedCount = $counts;
+
+        // Create a new stream of events.
+        $streamId = uniqid('testCanReadEventsThroughPersistentSubscriptions');
+
+        // Create a persistent subscription.
+        $settings = new PersistentSubscriptionSettings();
+        $client->createPersistentSubscription($streamId, 'group', $settings);
+
+        $events = $this->getEventDataSet($expectedCount);
+        if ($expectedCount > 0) {
+            $client->appendToStream($streamId, ExpectedVersion::ANY, $events);
+        }
+
+        $records = [];
+        $client->readStreamViaPersistentSubscription($streamId, 'group', function (EventRecord $event) use (&$records) {
+            $records[] = $event;
+        }, 20);
+
+        $eventsCollection = EventRecordCollection::fromArray($records);
+
+        // Ensure all events are returned.
+        $this->assertEventDataMatchesEventRecords($events, $eventsCollection, $streamId, 0);
+    }
+
+    public function differentCounts()
+    {
+        return [
+            [0],
+            [3],
+            [20],
+            [30],
+            [100],
+        ];
     }
 }

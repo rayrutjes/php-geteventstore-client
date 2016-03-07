@@ -8,7 +8,7 @@ use RayRutjes\GetEventStore\Client\Http\ReadEventStreamFeedResponseInspector;
 use RayRutjes\GetEventStore\ReadDirection;
 use RayRutjes\GetEventStore\StreamId;
 
-class EventStreamFeedIterator implements \Iterator
+final class EventStreamFeedIterator implements \Iterator
 {
     /**
      * @var StreamId

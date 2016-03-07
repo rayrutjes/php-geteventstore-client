@@ -3,14 +3,14 @@
 namespace RayRutjes\GetEventStore\Client\Http;
 
 use Psr\Http\Message\ResponseInterface;
+use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamViaPersistentSubscriptionFeed;
+use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamViaPersistentSubscriptionFeedLink;
 use RayRutjes\GetEventStore\EventRecord;
-use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamFeed;
-use RayRutjes\GetEventStore\Client\Http\Feed\EventStreamFeedLink;
 
-final class ReadEventStreamFeedResponseInspector extends AbstractResponseInspector
+final class ReadEventStreamViaPersistentSubscriptionResponseInspector extends AbstractResponseInspector
 {
     /**
-     * @var EventStreamFeed
+     * @var EventStreamViaPersistentSubscriptionFeed
      */
     private $feed;
 
@@ -30,10 +30,9 @@ final class ReadEventStreamFeedResponseInspector extends AbstractResponseInspect
         }
         $data = $this->decodeResponseBody($response);
 
-        // Todo: Handle parsing exceptions and throw corresponding errors.
         $links = [];
         foreach ($data['links'] as $link) {
-            $links[] = new EventStreamFeedLink($link['uri'], $link['relation']);
+            $links[] = new EventStreamViaPersistentSubscriptionFeedLink($link['uri'], $link['relation']);
         }
 
         $events = [];
@@ -48,14 +47,13 @@ final class ReadEventStreamFeedResponseInspector extends AbstractResponseInspect
         }
 
         $isHeadOfStream = $data['headOfStream'];
-        $eTag = $data['eTag'] ?? null;
-        $this->feed = new EventStreamFeed($events, $links, $isHeadOfStream, $eTag);
+        $this->feed = new EventStreamViaPersistentSubscriptionFeed($events, $links, $isHeadOfStream);
     }
 
     /**
-     * @return EventStreamFeed
+     * @return EventStreamViaPersistentSubscriptionFeed
      */
-    public function getFeed(): EventStreamFeed
+    public function getFeed(): EventStreamViaPersistentSubscriptionFeed
     {
         return $this->feed;
     }

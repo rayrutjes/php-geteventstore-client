@@ -4,7 +4,7 @@ namespace RayRutjes\GetEventStore;
 
 use Ramsey\Uuid\UuidInterface;
 
-class Uuid
+final class Uuid
 {
     /**
      * @var UuidInterface

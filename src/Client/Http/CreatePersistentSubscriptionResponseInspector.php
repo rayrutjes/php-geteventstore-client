@@ -4,20 +4,23 @@ namespace RayRutjes\GetEventStore\Client\Http;
 
 use Psr\Http\Message\ResponseInterface;
 
-final class DeleteStreamResponseInspector extends AbstractResponseInspector
+final class CreatePersistentSubscriptionResponseInspector extends AbstractResponseInspector
 {
     /**
      * @param ResponseInterface $response
+     *
+     * @throws BadRequestException
      */
     public function inspect(ResponseInterface $response)
     {
         $this->filterCommonErrors($response);
         switch ($response->getStatusCode()) {
-            case 204:
-                // OK.
+            /* OK */
+            case 201:
                 break;
+
+            /* KO. */
             default:
-                // KO.
                 throw $this->newBadRequestException($response);
         }
     }

@@ -4,7 +4,7 @@ namespace RayRutjes\GetEventStore\Client\Http\Feed;
 
 use RayRutjes\GetEventStore\EventRecord;
 
-final class EventStreamFeed
+final class EventStreamViaPersistentSubscriptionFeed
 {
     /**
      * @var array
@@ -17,22 +17,16 @@ final class EventStreamFeed
     private $links = [];
 
     /**
-     * @var string
-     */
-    private $eTag;
-
-    /**
      * @var bool
      */
     private $isHeadOfStream;
 
     /**
-     * @param array  $events
-     * @param array  $links
-     * @param bool   $isHeadOfStream
-     * @param string $eTag
+     * @param array $events
+     * @param array $links
+     * @param bool  $isHeadOfStream
      */
-    public function __construct(array $events, array $links, bool $isHeadOfStream, string $eTag = null)
+    public function __construct(array $events, array $links, bool $isHeadOfStream)
     {
         $this->validateEvents($events);
         $this->events = $events;
@@ -42,7 +36,6 @@ final class EventStreamFeed
             $this->links[$link->getRelation()] = $link;
         }
         $this->isHeadOfStream = $isHeadOfStream;
-        $this->eTag = $eTag;
     }
 
     /**
@@ -64,7 +57,7 @@ final class EventStreamFeed
      */
     private function validateLink($link)
     {
-        if (!$link instanceof EventStreamFeedLink) {
+        if (!$link instanceof EventStreamViaPersistentSubscriptionFeedLink) {
             throw new \InvalidArgumentException('Invalid link type %s.', get_class($link));
         }
         if (isset($this->links[$link->getRelation()])) {
@@ -77,15 +70,15 @@ final class EventStreamFeed
      */
     public function hasPreviousLink(): bool
     {
-        return isset($this->links[EventStreamFeedLink::LINK_PREVIOUS]);
+        return isset($this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_PREVIOUS]);
     }
 
     /**
-     * @return EventStreamFeedLink
+     * @return EventStreamViaPersistentSubscriptionFeedLink
      */
-    public function getPreviousLink(): EventStreamFeedLink
+    public function getPreviousLink(): EventStreamViaPersistentSubscriptionFeedLink
     {
-        return $this->links[EventStreamFeedLink::LINK_PREVIOUS];
+        return $this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_PREVIOUS];
     }
 
     /**
@@ -93,15 +86,15 @@ final class EventStreamFeed
      */
     public function hasNextLink(): bool
     {
-        return isset($this->links[EventStreamFeedLink::LINK_NEXT]);
+        return isset($this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_NEXT]);
     }
 
     /**
-     * @return EventStreamFeedLink
+     * @return EventStreamViaPersistentSubscriptionFeedLink
      */
-    public function getNextLink(): EventStreamFeedLink
+    public function getNextLink(): EventStreamViaPersistentSubscriptionFeedLink
     {
-        return $this->links[EventStreamFeedLink::LINK_NEXT];
+        return $this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_NEXT];
     }
 
     /**
@@ -109,23 +102,31 @@ final class EventStreamFeed
      */
     public function hasLastLink(): bool
     {
-        return isset($this->links[EventStreamFeedLink::LINK_LAST]);
+        return isset($this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_LAST]);
     }
 
     /**
-     * @return EventStreamFeedLink
+     * @return EventStreamViaPersistentSubscriptionFeedLink
      */
-    public function getLastLink(): EventStreamFeedLink
+    public function getLastLink(): EventStreamViaPersistentSubscriptionFeedLink
     {
-        return $this->links[EventStreamFeedLink::LINK_LAST];
+        return $this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_LAST];
     }
 
     /**
-     * @return string
+     * @return EventStreamViaPersistentSubscriptionFeedLink
      */
-    public function getETag(): string
+    public function getAckAllLink(): EventStreamViaPersistentSubscriptionFeedLink
     {
-        return $this->eTag;
+        return $this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_ACK_ALL];
+    }
+
+    /**
+     * @return EventStreamViaPersistentSubscriptionFeedLink
+     */
+    public function getNackAllLink(): EventStreamViaPersistentSubscriptionFeedLink
+    {
+        return $this->links[EventStreamViaPersistentSubscriptionFeedLink::LINK_NACK_ALL];
     }
 
     /**

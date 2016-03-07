@@ -4,10 +4,10 @@ namespace RayRutjes\GetEventStore\Client\Http\Feed;
 
 use RayRutjes\GetEventStore\EventRecord;
 
-final class EventStreamIterator implements \Iterator
+final class EventStreamViaPersistentSubscriptionIterator implements \Iterator
 {
     /**
-     * @var EventStreamFeedIterator
+     * @var EventStreamViaPersistentSubscriptionFeedIterator
      */
     private $feedIterator;
 
@@ -22,9 +22,9 @@ final class EventStreamIterator implements \Iterator
     private $currentKey;
 
     /**
-     * @param EventStreamFeedIterator $feedIterator
+     * @param EventStreamViaPersistentSubscriptionFeedIterator $feedIterator
      */
-    public function __construct(EventStreamFeedIterator $feedIterator)
+    public function __construct(EventStreamViaPersistentSubscriptionFeedIterator $feedIterator)
     {
         $this->feedIterator = $feedIterator;
     }
@@ -59,9 +59,8 @@ final class EventStreamIterator implements \Iterator
     private function newEventsIterator()
     {
         $events = $this->feedIterator->current()->getEvents();
-        if ($this->feedIterator->getReadDirection()->isForward()) {
-            $events = array_reverse($events);
-        }
+
+        $events = array_reverse($events);
 
         return new \ArrayIterator($events);
     }

@@ -40,4 +40,41 @@ interface ClientInterface
      * @return EventRecordCollection
      */
     public function readAllEventsFromStream(string $streamId) : EventRecordCollection;
+
+    /**
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
+     */
+    public function createPersistentSubscription(string $streamId, string $groupName, PersistentSubscriptionSettings $settings);
+
+    /**
+     * @param string                         $streamId
+     * @param string                         $groupName
+     * @param PersistentSubscriptionSettings $settings
+     */
+    public function updatePersistentSubscription(string $streamId, string $groupName, PersistentSubscriptionSettings $settings);
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     */
+    public function deletePersistentSubscription(string $streamId, string $groupName);
+
+    /**
+     * @param string $streamId
+     * @param string $groupName
+     *
+     * @return PersistentSubscriptionInfo
+     */
+    public function getPersistentSubscriptionInfo(string $streamId, string $groupName): PersistentSubscriptionInfo;
+
+    /**
+     * @param string   $streamId
+     * @param string   $groupName
+     * @param callable $messageHandler
+     * @param int      $batchSize
+     * @param bool     $autoAck
+     */
+    public function readStreamViaPersistentSubscription(string $streamId, string $groupName, callable $messageHandler, int $batchSize = 1, bool $autoAck = true);
 }
